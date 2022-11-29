@@ -140,9 +140,9 @@ class UI:
                         self.pxgrid[x, y] = self.colours["light_unknown_colour"] # type: ignore
                 else:
                     if (x + y) % 2:
-                        self.pxgrid[x, y] = self.colours["light_known_colour"] # type: ignore
-                    else:
                         self.pxgrid[x, y] = self.colours["dark_known_colour"] # type: ignore
+                    else:
+                        self.pxgrid[x, y] = self.colours["light_known_colour"] # type: ignore
         scaled_size = self.scale_constants["scaled_size"]
         inset_position = self.scale_constants["inset_position"]
         self.screen.blit(pygame.transform.scale(
