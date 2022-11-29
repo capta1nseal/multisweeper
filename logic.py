@@ -20,6 +20,7 @@ class Logic:
             False
             for y in range(0, self.field_size[1])]
             for x in range(0, self.field_size[0])]
+        self.flags = []
 
     def generate(self, location: tuple[int, int]) -> None:
         '''generate minefield with starting click at specified position'''
@@ -72,6 +73,9 @@ class Logic:
         print("W")
         self.running = False
 
+    def get_flags(self) -> list[tuple[int, int]]:
+        '''get a list of flag coordinates'''
+        return self.flags
 
     def check_win(self) -> None:
         '''check if game won'''
@@ -143,3 +147,8 @@ class Logic:
         remove flag if already flagged
         do nothing if game not started
         '''
+        if self.started and not self.mask_layer[location[0]][location[1]]:
+            if not location in self.flags:
+                self.flags.append(location)
+            else:
+                self.flags.remove(location)

@@ -19,6 +19,7 @@ class UI:
             "light_unknown_colour": 0x666666,
             "dark_known_colour": 0xAAAAAA,
             "light_known_colour": 0xCCCCCC,
+            "flag_colour": 0xCC3333,
             "font_colour": 0x000000
         }
 
@@ -153,7 +154,9 @@ class UI:
         for x in range(0, size[0]):
             for y in range(0, size[1]):
                 if field[x][y] == 10:
-                    if (x + y) % 2:
+                    if (x, y) in self.logic.get_flags():
+                        self.pxgrid[x, y] = self.colours["flag_colour"] # type: ignore
+                    elif (x + y) % 2:
                         self.pxgrid[x, y] = self.colours["light_unknown_colour"] # type: ignore
                 else:
                     if (x + y) % 2:
