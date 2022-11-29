@@ -19,7 +19,7 @@ class UI:
             "light_unknown_colour": 0x666666,
             "dark_known_colour": 0xAAAAAA,
             "light_known_colour": 0xCCCCCC,
-            "flag_colour": 0xCC3333,
+            "flag_colour": 0xF11919,
             "font_colour": 0x000000
         }
 

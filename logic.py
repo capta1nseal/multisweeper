@@ -134,6 +134,8 @@ class Logic:
                 self.mask_layer[x][y] = True
                 self.undiscovered_squares -= 1
                 self.spread(location)
+                if location in self.flags:
+                    self.flags.remove(location)
         else:
             self.started = True
             self.generate(location)

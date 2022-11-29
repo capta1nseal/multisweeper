@@ -9,6 +9,6 @@ currently a playable single-player version of minesweeper, under active developm
 
 ## controls
 - Left click - dig
-- Right click - flag (not yet implemented)
+- Right click - flag
 - Esc - close game
 - F11 - full screen
