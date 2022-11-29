@@ -6,7 +6,7 @@ from logic import Logic
 from ui import UI
 
 if __name__ == "__main__":
-    fps = 30
+    FPS = 30
 
     clock = pygame.time.Clock()
     logic = Logic()
@@ -17,5 +17,5 @@ if __name__ == "__main__":
         ui.handle_events()
         # logic.tick()
         ui.draw()
-        clock.tick(fps)
+        clock.tick(FPS)
     pygame.quit()

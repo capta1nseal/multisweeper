@@ -19,6 +19,16 @@ class UI:
 
         self.calculate_scaling()
 
+        self.small_surface = pygame.Surface(self.logic.get_size())
+        self.pxgrid = pygame.PixelArray(self.small_surface)
+
+        self.dark_unknown_colour = 0x444444
+        self.light_unknown_colour = 0x666666
+        self.dark_known_colour = 0xAAAAAA
+        self.light_known_colour = 0xCCCCCC
+
+        self.font_colour = 0x000000
+
         self.fullscreen = False
 
     def calculate_scaling(self):
@@ -41,7 +51,7 @@ class UI:
         self.scale_constants["inset_position"] = (
             window_size[0] / 2 - self.scale_constants["scaled_size"][0] / 2,
             window_size[1] / 2 - self.scale_constants["scaled_size"][1] / 2)
-    
+
     def toggle_fullscreen(self) -> None:
         '''change between fullscreen and windowed display modes'''
         if self.fullscreen:
@@ -80,15 +90,57 @@ class UI:
                         self.scale_constants["window_size"], pygame.RESIZABLE)
                 self.screen.fill(self.background_colour)
                 pygame.display.update()
-            
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos
+                mouse_position = pygame.mouse.get_pos()
+                inset_position = self.scale_constants["inset_position"]
+                scaled_size = self.scale_constants["scaled_size"]
+                field_size = self.logic.get_size()
                 # - event.button: 1=left click, 3=right click
                 if event.button == 1:
-                    print("left click")
+                    if mouse_position[0] >= inset_position[0] and \
+                            mouse_position[0] < inset_position[0]+scaled_size[0] and \
+                            mouse_position[1] >= inset_position[1] and \
+                            mouse_position[1] < inset_position[1]+scaled_size[1]:
+                        self.logic.dig(
+                            (int((mouse_position[0] - inset_position[0]) /
+                                (scaled_size[0] / field_size[0])),
+                            int((mouse_position[1] - inset_position[1]) /
+                                (scaled_size[1] / field_size[1]))))
+                    else:
+                        print(
+                            f"left click outside of game area, coordinates \
+                            ({mouse_position[0]},{mouse_position[1]})")
                 elif event.button == 3:
-                    print("right click")
-    
+                    if mouse_position[0] >= inset_position[0] and \
+                            mouse_position[0] < inset_position[0]+scaled_size[0] and \
+                            mouse_position[1] >= inset_position[1] and \
+                            mouse_position[1] < inset_position[1]+scaled_size[1]:
+                        self.logic.flag((
+                            int((mouse_position[0] - inset_position[0]) /
+                                (scaled_size[0] / field_size[0])),
+                            int((mouse_position[1] - inset_position[1]) /
+                                (scaled_size[1] / field_size[1]))))
+
     def draw(self) -> None:
         '''draw game state to pygame display'''
+        field = self.logic.get_field()
+        size = self.logic.get_size()
+        self.small_surface.fill(self.dark_unknown_colour)
+        for x in range(0, size[0]):
+            for y in range(0, size[1]):
+                if field[x][y] == 10:
+                    if (x + y) % 2:
+                        self.pxgrid[x, y] = self.light_unknown_colour # type: ignore
+                else:
+                    if (x + y) % 2:
+                        self.pxgrid[x, y] = self.light_known_colour # type: ignore
+                    else:
+                        self.pxgrid[x, y] = self.dark_known_colour # type: ignore
+        scaled_size = self.scale_constants["scaled_size"]
+        inset_position = self.scale_constants["inset_position"]
+        self.screen.blit(pygame.transform.scale(
+            self.small_surface,
+            (int(scaled_size[0]), int(scaled_size[1]))),
+            (int(inset_position[0]), int(inset_position[1])))
         pygame.display.update()
