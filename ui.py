@@ -11,23 +11,22 @@ class UI:
             "scaled_size": (0, 0),
             "inset_position": (0,0)
         }
-
-        self.background_colour = (0, 0, 0)
+        self.colours = {
+            "background_colour": 0x000000,
+            "dark_unknown_colour": 0x444444,
+            "light_unknown_colour": 0x666666,
+            "dark_known_colour": 0xAAAAAA,
+            "light_known_colour": 0xCCCCCC,
+            "font_colour": 0x000000
+        }
 
         self.screen = pygame.display.set_mode(self.scale_constants["window_size"], pygame.RESIZABLE)
-        self.screen.fill(self.background_colour)
+        self.screen.fill(self.colours["background_colour"])
 
         self.calculate_scaling()
 
         self.small_surface = pygame.Surface(self.logic.get_size())
         self.pxgrid = pygame.PixelArray(self.small_surface)
-
-        self.dark_unknown_colour = 0x444444
-        self.light_unknown_colour = 0x666666
-        self.dark_known_colour = 0xAAAAAA
-        self.light_known_colour = 0xCCCCCC
-
-        self.font_colour = 0x000000
 
         self.fullscreen = False
 
@@ -66,7 +65,7 @@ class UI:
         self.scale_constants["window_size"] = self.screen.get_size()
         self.calculate_scaling()
 
-        self.screen.fill(self.background_colour)
+        self.screen.fill(self.colours["background_colour"])
         pygame.display.update()
 
     def handle_events(self) -> None:
@@ -88,7 +87,7 @@ class UI:
                 else:
                     self.screen = pygame.display.set_mode(
                         self.scale_constants["window_size"], pygame.RESIZABLE)
-                self.screen.fill(self.background_colour)
+                self.screen.fill(self.colours["background_colour"])
                 pygame.display.update()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -107,6 +106,7 @@ class UI:
                                 (scaled_size[0] / field_size[0])),
                             int((mouse_position[1] - inset_position[1]) /
                                 (scaled_size[1] / field_size[1]))))
+                        self.logic.check_win()
                     else:
                         print(
                             f"left click outside of game area, coordinates \
@@ -122,21 +122,27 @@ class UI:
                             int((mouse_position[1] - inset_position[1]) /
                                 (scaled_size[1] / field_size[1]))))
 
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.logic.stop()
+                elif event.key == pygame.K_F11:
+                    self.toggle_fullscreen()
+
     def draw(self) -> None:
         '''draw game state to pygame display'''
         field = self.logic.get_field()
         size = self.logic.get_size()
-        self.small_surface.fill(self.dark_unknown_colour)
+        self.small_surface.fill(self.colours["dark_unknown_colour"])
         for x in range(0, size[0]):
             for y in range(0, size[1]):
                 if field[x][y] == 10:
                     if (x + y) % 2:
-                        self.pxgrid[x, y] = self.light_unknown_colour # type: ignore
+                        self.pxgrid[x, y] = self.colours["light_unknown_colour"] # type: ignore
                 else:
                     if (x + y) % 2:
-                        self.pxgrid[x, y] = self.light_known_colour # type: ignore
+                        self.pxgrid[x, y] = self.colours["light_known_colour"] # type: ignore
                     else:
-                        self.pxgrid[x, y] = self.dark_known_colour # type: ignore
+                        self.pxgrid[x, y] = self.colours["dark_known_colour"] # type: ignore
         scaled_size = self.scale_constants["scaled_size"]
         inset_position = self.scale_constants["inset_position"]
         self.screen.blit(pygame.transform.scale(

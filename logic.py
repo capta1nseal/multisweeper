@@ -7,6 +7,7 @@ class Logic:
 
         self.clear_state()
 
+        self.undiscovered_squares = self.field_size[0] * self.field_size[1]
         self.running = False
         self.started = False
 
@@ -66,6 +67,13 @@ class Logic:
         print("L")
         self.running = False
 
+    def check_win(self) -> None:
+        '''check if game won'''
+        print(self.undiscovered_squares)
+        if self.undiscovered_squares == self.mine_count:
+            print("W")
+            self.running = False
+
     def get_neighbours(self, location: tuple[int, int]) -> list[tuple[int, int]]:
         '''
         get coordinates of squares neighbouring the specified location
@@ -111,15 +119,18 @@ class Logic:
         spread out the dug area if safe
         '''
         x, y = location
-        self.mask_layer[x][y] = True
         if self.started:
             if self.mine_field[x][y] == 9:
                 self.lose_game()
-            elif self.mask_layer[x][y]:
+            elif not self.mask_layer[x][y]:
+                self.mask_layer[x][y] = True
+                self.undiscovered_squares -= 1
                 self.spread(location)
         else:
             self.started = True
             self.generate(location)
+            self.mask_layer[x][y] = True
+            self.undiscovered_squares -= 1
             self.spread(location)
 
     def flag(self, location: tuple[int, int]) -> None:
