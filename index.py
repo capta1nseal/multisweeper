@@ -9,7 +9,7 @@ if __name__ == "__main__":
     FPS = 30
 
     clock = Clock()
-    logic = Logic(mine_count = 35)
+    logic = Logic()
     ui = UI(logic)
 
     logic.running = True
