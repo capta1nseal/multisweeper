@@ -9,13 +9,12 @@ if __name__ == "__main__":
     FPS = 30
 
     clock = pygame.time.Clock()
-    logic = Logic()
+    logic = Logic(mine_count = 5)
     ui = UI(logic)
 
     logic.running = True
     while logic.running:
         ui.handle_events()
-        # logic.tick()
         ui.draw()
         clock.tick(FPS)
     pygame.quit()

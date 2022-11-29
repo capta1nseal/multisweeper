@@ -97,7 +97,6 @@ class Logic:
         if the clicked square is non-numbered
         '''
         if not self.mine_field[location[0]][location[1]]:
-            print(f"spreading to coordinates{self.get_neighbours(location)}")
             unknown_neighbours = [
                 neighbour for neighbour in self.get_neighbours(location)
                 if not self.mask_layer[neighbour[0]][neighbour[1]]]
@@ -116,7 +115,7 @@ class Logic:
         if self.started:
             if self.mine_field[x][y] == 9:
                 self.lose_game()
-            elif self.mine_field[x][y]:
+            elif self.mask_layer[x][y]:
                 self.spread(location)
         else:
             self.started = True
