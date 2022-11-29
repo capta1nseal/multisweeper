@@ -5,6 +5,8 @@ from logic import Logic
 
 class UI:
     def __init__(self, logic: Logic, window_size: tuple[int, int] = (640, 480)) -> None:
+        pygame.init()
+
         self.logic = logic
         self.scale_constants = {
             "window_size": window_size,
@@ -24,6 +26,7 @@ class UI:
         self.screen.fill(self.colours["background_colour"])
 
         self.calculate_scaling()
+        self.render_numbers()
 
         self.small_surface = pygame.Surface(self.logic.get_size())
         self.pxgrid = pygame.PixelArray(self.small_surface)
@@ -51,6 +54,18 @@ class UI:
             window_size[0] / 2 - self.scale_constants["scaled_size"][0] / 2,
             window_size[1] / 2 - self.scale_constants["scaled_size"][1] / 2)
 
+    def render_numbers(self) -> None:
+        '''render the numbers to surfaces at scale'''
+        square_size = self.scale_constants["scaled_size"][1] / self.logic.get_size()[1]
+        font_size = int(square_size * 0.9)
+        font = pygame.font.Font("./data/fonts/Lato/Lato-Bold.ttf", font_size)
+        self.numbers = [
+            font.render(str(number), True, self.colours["font_colour"])
+            for number in range(1, 9)]
+        self.number_offsets = [
+            (square_size - surface.get_size()[0]) / 2
+            for surface in self.numbers] + [(square_size - font_size) / 2 - 5]
+
     def toggle_fullscreen(self) -> None:
         '''change between fullscreen and windowed display modes'''
         if self.fullscreen:
@@ -64,6 +79,7 @@ class UI:
 
         self.scale_constants["window_size"] = self.screen.get_size()
         self.calculate_scaling()
+        self.render_numbers()
 
         self.screen.fill(self.colours["background_colour"])
         pygame.display.update()
@@ -80,6 +96,7 @@ class UI:
             elif event.type == pygame.VIDEORESIZE:
                 self.scale_constants["window_size"] = event.size
                 self.calculate_scaling()
+                self.render_numbers()
 
                 if self.fullscreen:
                     self.screen = pygame.display.set_mode(
@@ -145,8 +162,16 @@ class UI:
                         self.pxgrid[x, y] = self.colours["light_known_colour"] # type: ignore
         scaled_size = self.scale_constants["scaled_size"]
         inset_position = self.scale_constants["inset_position"]
+        square_size = scaled_size[1] / self.logic.get_size()[1]
         self.screen.blit(pygame.transform.scale(
             self.small_surface,
             (int(scaled_size[0]), int(scaled_size[1]))),
             (int(inset_position[0]), int(inset_position[1])))
+        for x in range(0, size[0]):
+            for y in range(0, size[1]):
+                square_value = field[x][y]
+                if square_value not in (0, 10):
+                    self.screen.blit(self.numbers[square_value - 1],(
+                        inset_position[0] + x * square_size + self.number_offsets[square_value - 1],
+                        inset_position[1] + y * square_size + self.number_offsets[8]))
         pygame.display.update()

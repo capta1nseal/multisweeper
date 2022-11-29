@@ -67,12 +67,16 @@ class Logic:
         print("L")
         self.running = False
 
+    def win_game(self) -> None:
+        '''win game'''
+        print("W")
+        self.running = False
+
+
     def check_win(self) -> None:
         '''check if game won'''
-        print(self.undiscovered_squares)
         if self.undiscovered_squares == self.mine_count:
-            print("W")
-            self.running = False
+            self.win_game()
 
     def get_neighbours(self, location: tuple[int, int]) -> list[tuple[int, int]]:
         '''
