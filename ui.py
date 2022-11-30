@@ -124,7 +124,6 @@ class UI:
                                 (scaled_size[0] / field_size[0])),
                             int((mouse_position[1] - inset_position[1]) /
                                 (scaled_size[1] / field_size[1]))))
-                        self.logic.check_win()
                     else:
                         print(
                             f"left click outside of game area, coordinates \
@@ -139,6 +138,10 @@ class UI:
                                 (scaled_size[0] / field_size[0])),
                             int((mouse_position[1] - inset_position[1]) /
                                 (scaled_size[1] / field_size[1]))))
+                    else:
+                        print(
+                            f"right click outside of game area, coordinates \
+                            ({mouse_position[0]},{mouse_position[1]})")
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
