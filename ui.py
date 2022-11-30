@@ -65,7 +65,7 @@ class UI:
             for number in range(1, 9)]
         self.number_offsets = [
             (square_size - surface.get_size()[0]) / 2
-            for surface in self.numbers] + [(square_size - font_size) / 2 - 5]
+            for surface in self.numbers] + [(square_size - font_size) / 2]
 
     def toggle_fullscreen(self) -> None:
         '''change between fullscreen and windowed display modes'''
