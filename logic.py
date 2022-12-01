@@ -9,10 +9,9 @@ class Logic:
         self.clear_state()
 
         self.undiscovered_squares = self.field_size[0] * self.field_size[1]
-        setrecursionlimit(
-            self.undiscovered_squares - self.mine_count
-            if self.undiscovered_squares - self.mine_count > getrecursionlimit()
-            else getrecursionlimit())
+        if self.undiscovered_squares - self.mine_count > getrecursionlimit():
+            setrecursionlimit(self.undiscovered_squares - self.mine_count)
+
         self.running = False
         self.started = False
 
@@ -113,45 +112,39 @@ class Logic:
 
     def dig(self, location: tuple[int, int]) -> None:
         '''
-        dig at a square
+        dig at a location
+        spread if 0 neighbouring mines
+        spread if number of flags matches number
         lose if mine
-        generate if game not yet started
-        spread out the dug area if safe
         '''
-        if not self.running:
-            return None
-        x, y = location
-        dug_value = self.mine_field[x][y]
-        if self.started:
-            if dug_value == 9:
-                self.lose_game()
-            elif not self.mask_layer[x][y]:
-                self.mask_layer[x][y] = True
-                self.undiscovered_squares -= 1
-                self.check_win()
-                if location in self.flags:
-                    self.flags.remove(location)
-            elif dug_value:
-                neighbouring_flags = [
-                    flag for flag in self.flags
-                    if flag in self.get_neighbours(location)]
-                if dug_value == len(neighbouring_flags):
-                    for neighbour in self.get_neighbours(location):
-                        if not self.mask_layer[neighbour[0]][neighbour[1]] and \
-                        not neighbour in neighbouring_flags:
-                            self.dig(neighbour)
-        else:
+        if not self.started:
             self.started = True
             self.generate(location)
-            self.mask_layer[x][y] = True
-            self.undiscovered_squares -= 1
-            self.check_win()
-        if not self.mine_field[location[0]][location[1]]:
-            unknown_neighbours = [
-                neighbour for neighbour in self.get_neighbours(location)
-                if not self.mask_layer[neighbour[0]][neighbour[1]]]
-            for neighbour in unknown_neighbours:
-                self.dig(neighbour)
+        dug_value = self.mine_field[location[0]][location[1]]
+        if dug_value == 9:
+            self.lose_game()
+        if not self.running:
+            return None
+        if dug_value and self.mask_layer[location[0]][location[1]]:
+            neighbours = self.get_neighbours(location)
+            neighbouring_flags = [
+                flag for flag in self.flags
+                if flag in neighbours]
+            if dug_value == len(neighbouring_flags):
+                for neighbour in neighbours:
+                    if not self.mask_layer[neighbour[0]][neighbour[1]] and \
+                            not neighbour in neighbouring_flags:
+                        self.dig(neighbour)
+        else:
+            island = [location]
+            while island:
+                x, y = island.pop(0)
+                if not self.mask_layer[x][y]:
+                    self.mask_layer[x][y] = True
+                    self.undiscovered_squares -= 1
+                    self.check_win()
+                    if not self.mine_field[x][y]:
+                        island += self.get_neighbours((x, y))
         return None
 
     def flag(self, location: tuple[int, int]) -> None:

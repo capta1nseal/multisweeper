@@ -59,7 +59,7 @@ class UI:
         '''render the numbers to surfaces at scale'''
         square_size = self.scale_constants["scaled_size"][1] / self.logic.get_size()[1]
         font_size = int(square_size * 0.9)
-        font = pygame.font.Font("./data/fonts/Lato/Lato-Bold.ttf", font_size)
+        font = pygame.font.Font("./data/font/Lato/Lato-Bold.ttf", font_size)
         self.numbers = [
             font.render(str(number), True, self.colours["font_colour"])
             for number in range(1, 9)]
