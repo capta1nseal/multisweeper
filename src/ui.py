@@ -1,7 +1,9 @@
+from client import Client
 from contextlib import redirect_stdout
 with redirect_stdout(None):
     import pygame
 from logic import Logic
+
 
 class UI:
     def __init__(self, logic: Logic, window_size: tuple[int, int] = (640, 480)) -> None:
@@ -11,7 +13,7 @@ class UI:
         self.scale_constants = {
             "window_size": window_size,
             "scaled_size": (0, 0),
-            "inset_position": (0,0)
+            "inset_position": (0, 0)
         }
         self.colours = {
             "background_colour": 0x000000,
@@ -23,7 +25,8 @@ class UI:
             "font_colour": 0x000000
         }
 
-        self.screen = pygame.display.set_mode(self.scale_constants["window_size"], pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(
+            self.scale_constants["window_size"], pygame.RESIZABLE)
         self.screen.fill(self.colours["background_colour"])
 
         self.calculate_scaling()
@@ -33,6 +36,8 @@ class UI:
         self.pxgrid = pygame.PixelArray(self.small_surface)
 
         self.fullscreen = False
+
+        self.client1 = Client()
 
     def calculate_scaling(self):
         '''
@@ -57,9 +62,10 @@ class UI:
 
     def render_numbers(self) -> None:
         '''render the numbers to surfaces at scale'''
-        square_size = self.scale_constants["scaled_size"][1] / self.logic.get_size()[1]
+        square_size = self.scale_constants["scaled_size"][1] / self.logic.get_size()[
+            1]
         font_size = int(square_size * 0.9)
-        font = pygame.font.Font("./data/font/Lato/Lato-Bold.ttf", font_size)
+        font = pygame.font.Font("../data/font/Lato/Lato-Bold.ttf", font_size)
         self.numbers = [
             font.render(str(number), True, self.colours["font_colour"])
             for number in range(1, 9)]
@@ -91,6 +97,8 @@ class UI:
         such as key presses, window resizing and clicks
         '''
         for event in pygame.event.get():
+
+
             if event.type == pygame.QUIT:
                 self.logic.stop()
 
@@ -109,6 +117,8 @@ class UI:
                 pygame.display.update()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.client1.send(str(event))
+                
                 mouse_position = pygame.mouse.get_pos()
                 inset_position = self.scale_constants["inset_position"]
                 scaled_size = self.scale_constants["scaled_size"]
@@ -121,9 +131,9 @@ class UI:
                             mouse_position[1] < inset_position[1]+scaled_size[1]:
                         self.logic.dig(
                             (int((mouse_position[0] - inset_position[0]) /
-                                (scaled_size[0] / field_size[0])),
-                            int((mouse_position[1] - inset_position[1]) /
-                                (scaled_size[1] / field_size[1]))))
+                                 (scaled_size[0] / field_size[0])),
+                             int((mouse_position[1] - inset_position[1]) /
+                                 (scaled_size[1] / field_size[1]))))
                     else:
                         print(
                             f"left click outside of game area, coordinates \
@@ -158,14 +168,19 @@ class UI:
             for y in range(0, size[1]):
                 if field[x][y] == 10:
                     if (x, y) in self.logic.get_flags():
-                        self.pxgrid[x, y] = self.colours["flag_colour"] # type: ignore
+                        # type: ignore
+                        self.pxgrid[x, y] = self.colours["flag_colour"]
                     elif (x + y) % 2:
-                        self.pxgrid[x, y] = self.colours["light_unknown_colour"] # type: ignore
+                        # type: ignore
+                        self.pxgrid[x,
+                                    y] = self.colours["light_unknown_colour"]
                 else:
                     if (x + y) % 2:
-                        self.pxgrid[x, y] = self.colours["dark_known_colour"] # type: ignore
+                        # type: ignore
+                        self.pxgrid[x, y] = self.colours["dark_known_colour"]
                     else:
-                        self.pxgrid[x, y] = self.colours["light_known_colour"] # type: ignore
+                        # type: ignore
+                        self.pxgrid[x, y] = self.colours["light_known_colour"]
         scaled_size = self.scale_constants["scaled_size"]
         inset_position = self.scale_constants["inset_position"]
         square_size = scaled_size[1] / self.logic.get_size()[1]
@@ -177,7 +192,8 @@ class UI:
             for y in range(0, size[1]):
                 square_value = field[x][y]
                 if square_value not in (0, 10):
-                    self.screen.blit(self.numbers[square_value - 1],(
-                        inset_position[0] + x * square_size + self.number_offsets[square_value - 1],
+                    self.screen.blit(self.numbers[square_value - 1], (
+                        inset_position[0] + x * square_size +
+                        self.number_offsets[square_value - 1],
                         inset_position[1] + y * square_size + self.number_offsets[8]))
         pygame.display.update()
