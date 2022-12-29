@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from contextlib import redirect_stdout
 with redirect_stdout(None):
     from pygame.time import Clock
