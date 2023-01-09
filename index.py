@@ -8,7 +8,7 @@ from logic import Logic
 from ui import UI
 
 if __name__ == "__main__":
-    FPS = 30
+    FPS = 60
 
     clock = Clock()
     logic = Logic()

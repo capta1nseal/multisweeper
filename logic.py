@@ -1,5 +1,4 @@
 from random import sample
-from sys import setrecursionlimit, getrecursionlimit
 
 class Logic:
     def __init__(self, field_size: tuple[int, int] = (18, 10), mine_count: int = 35) -> None:
@@ -9,8 +8,6 @@ class Logic:
         self.clear_state()
 
         self.undiscovered_squares = self.field_size[0] * self.field_size[1]
-        if self.undiscovered_squares - self.mine_count > getrecursionlimit():
-            setrecursionlimit(self.undiscovered_squares - self.mine_count)
 
         self.running = False
         self.started = False
