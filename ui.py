@@ -23,6 +23,17 @@ class UI:
             "font_colour": 0x000000
         }
 
+        self.number_colours = [
+            (0, 0, 255), #1, blue
+            (0, 255, 0), #2, green
+            (255, 0, 0), #3, red
+            (127, 0, 255), #4, purple
+            (127, 0, 0), #5, maroon
+            (32, 112, 104), #6, turqoise 
+            (0, 0, 0), #7, black
+            (36, 36, 36) #8, grey
+        ]
+
         self.screen = pygame.display.set_mode(self.window_constants["window_size"], pygame.RESIZABLE)
         self.screen.fill(self.colours["background_colour"])
 
@@ -60,9 +71,11 @@ class UI:
         square_size = self.window_constants["scaled_game_size"][1] / self.logic.get_size()[1]
         font_size = int(square_size * 0.9)
         font = pygame.font.Font("./data/font/Lato/Lato-Bold.ttf", font_size)
+
         self.numbers = [
-            font.render(str(number), True, self.colours["font_colour"])
+            font.render(str(number), True, self.number_colours[number - 1])
             for number in range(1, 9)]
+
         self.number_offsets = [
             (square_size - surface.get_size()[0]) / 2
             for surface in self.numbers] + [(square_size - font_size) / 2]
