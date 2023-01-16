@@ -15,23 +15,23 @@ class UI:
         }
         self.colours = {
             "background_colour": 0x000000,
-            "dark_unknown_colour": 0x444444,
-            "light_unknown_colour": 0x666666,
-            "dark_known_colour": 0xAAAAAA,
-            "light_known_colour": 0xCCCCCC,
+            "dark_unknown_colour": 0xA2D149,
+            "light_unknown_colour": 0xAAD751,
+            "dark_known_colour": 0xD7B899,
+            "light_known_colour": 0xE5C29F,
             "flag_colour": 0xF11919,
             "font_colour": 0x000000
         }
 
         self.number_colours = [
-            (0, 0, 255), #1, blue
-            (0, 255, 0), #2, green
-            (255, 0, 0), #3, red
-            (127, 0, 255), #4, purple
-            (127, 0, 0), #5, maroon
+            (25, 118, 210), #1, blue
+            (56, 142, 60), #2, green
+            (211, 47, 47), #3, red
+            (122, 30, 162), #4, purple
+            (255, 141, 0), #5, orange
             (64, 224, 208), #6, turqoise 
             (0, 0, 0), #7, black
-            (36, 36, 36) #8, grey
+            (166, 156, 146) #8, grey
         ]
 
         self.screen = pygame.display.set_mode(self.window_constants["window_size"], pygame.RESIZABLE)
