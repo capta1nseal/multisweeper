@@ -15,8 +15,8 @@ class UI:
         }
         self.colours = {
             "background_colour": 0x000000,
-            "dark_unknown_colour": 0xA2D149,
-            "light_unknown_colour": 0xAAD751,
+            "dark_unknown_colour": 0x444444,
+            "light_unknown_colour": 0x666666,
             "dark_known_colour": 0xD7B899,
             "light_known_colour": 0xE5C29F,
             "flag_colour": 0xF11919,
