@@ -142,7 +142,9 @@ class Logic:
                     self.check_win()
                     if not self.mine_field[x][y]:
                         island += self.get_neighbours((x, y))
-        return None
+
+        if location in self.flags:
+            self.flags.remove(location)
 
     def flag(self, location: tuple[int, int]) -> None:
         '''
