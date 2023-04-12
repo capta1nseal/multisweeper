@@ -37,7 +37,7 @@ class Logic:
     def place_mine(self, mine_location: tuple[int, int]) -> None:
         '''
         place a mine at a position
-        also increments numbers on safe squares ordering the mine
+        also increments numbers on safe squares bordering the mine
         '''
         self.mine_field[mine_location[0]][mine_location[1]] = 9
 
@@ -117,11 +117,15 @@ class Logic:
         if not self.started:
             self.started = True
             self.generate(location)
+        
         dug_value = self.mine_field[location[0]][location[1]]
+
         if dug_value == 9:
             self.lose_game()
+        
         if not self.running:
             return None
+        
         if dug_value and self.mask_layer[location[0]][location[1]]:
             neighbours = self.get_neighbours(location)
             neighbouring_flags = [
@@ -132,6 +136,7 @@ class Logic:
                     if not self.mask_layer[neighbour[0]][neighbour[1]] and \
                             not neighbour in neighbouring_flags:
                         self.dig(neighbour)
+        
         else:
             island = [location]
             while island:
