@@ -117,6 +117,9 @@ class Logic:
         if not self.started:
             self.started = True
             self.generate(location)
+        
+        if location in self.flags:
+            return
 
         dug_value = self.mine_field[location[0]][location[1]]
 
@@ -147,9 +150,6 @@ class Logic:
                     self.check_win()
                     if not self.mine_field[x][y]:
                         island += self.get_neighbours((x, y))
-
-        if location in self.flags:
-            self.flags.remove(location)
 
     def flag(self, location: tuple[int, int]) -> None:
         '''
